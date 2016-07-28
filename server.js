@@ -24,7 +24,7 @@ app.post('/api/record', record.post);
 
 app.post('/auth/register', auth.register);
 
-mongoose.connect("mongodb://localhost:27017/test", function(err, db){
+mongoose.connect("mongodb://vitalsensAdmin:vitalsensAdmin@ds011482.mlab.com:11482/vitalsens", function(err, db){
     if(!err){
         console.log("we are connected to mongo");
     }

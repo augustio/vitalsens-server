@@ -1,4 +1,4 @@
-var RecordData = require('../models/recordData');
+var RecordData = require('../models/RecordData');
 
 module.exports = {
     get: function (req, res){

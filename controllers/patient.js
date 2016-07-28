@@ -1,4 +1,4 @@
-var Patient = require('../models/patient');
+var Patient = require('../models/Patient');
 
 module.exports = {
     get: function (req, res){

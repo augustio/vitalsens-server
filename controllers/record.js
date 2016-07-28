@@ -1,6 +1,6 @@
-var Record = require('../models/record');
-var Patient = require('../models/patient');
-var RecordData = require('../models/recordData');
+var Record = require('../models/Record');
+var Patient = require('../models/Patient');
+var RecordData = require('../models/RecordData');
 
 module.exports = {
     get: function (req, res){
