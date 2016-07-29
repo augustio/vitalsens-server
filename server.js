@@ -1,12 +1,13 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
 var User = require('./models/User');
 var auth = require('./controllers/auth');
 var patient = require('./controllers/patient');
 var record = require('./controllers/record');
 var recordData = require('./controllers/recordData');
+var config = require('./config');
+
 
 app.use(bodyParser.json());
 
@@ -24,11 +25,7 @@ app.post('/api/record', record.post);
 
 app.post('/auth/register', auth.register);
 
-mongoose.connect("mongodb://vitalsensAdmin:vitalsensAdmin@ds011482.mlab.com:11482/vitalsens", function(err, db){
-    if(!err){
-        console.log("we are connected to mongo");
-    }
-});
+config.connectDb();
 
 var server = app.listen(5000, function(){
     console.log("Listening on port 5000");

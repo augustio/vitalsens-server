@@ -1,6 +1,9 @@
 var Record = require('../models/Record');
 var Patient = require('../models/Patient');
 var RecordData = require('../models/RecordData');
+var configFile = require('../config');
+var autobahn = require('autobahn');
+var metro = require('../metropolia');
 
 module.exports = {
     get: function (req, res){
@@ -36,5 +39,7 @@ module.exports = {
                 console.error(err);
             }
         });
+        var d = recordData.chOne.split(",");
+        metro.osppAnalyse(d);
     }
 }
