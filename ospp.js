@@ -23,6 +23,7 @@
 
 var autobahn = require('autobahn');
 var fs = require('fs');
+var RecordData = require('./models/RecordData'); 
 
 // Application Parameters Initialization
 
@@ -36,18 +37,16 @@ var closeUrl = "com.ospp.session.close";					// Close Session Remote procedure i
 
 // Global Variables. 
 var pipelineKeys;
-var showResult = true;
 var inFilePath = "data/in/ecg.1m.txt";
 var  outFilePath = "data/out/ecg.1m.txt";
-var chOne;
+var inputData = [];
 
 module.exports = {
     
-    osppAnalyse: function(ch1){
+    process: function(data){
         readPipelineKeys();
-        chOne = ch1.slice();
+        inputData.push(data);
     
-        console.log("\n ------ Hello Metropolia ------ \n");
         console.log("Waiting for connection to OSPP live engine...");
         console.log(wampRouterUrl);
      
@@ -66,7 +65,9 @@ module.exports = {
 	       var sessionId, streamUrl, outputUrl;
 	       var t1,t2;
 
-	       var ecgSignal = readData()  
+           var ecgDoc = inputData.shift();
+           var ecgDocId = ecgDoc.id;
+	       var ecgSignal = readData(ecgDoc.chOne);  
 
 	       console.log("Step.1) Sending session open request to OSPP ...\n") 
 
@@ -114,30 +115,23 @@ module.exports = {
                 var timeKey = 'processingTime'			
                 console.log("Step.4) Results Received Back from OSPP Engine");
                 
-                output = res[0];
-                console.log("here");
-                
-                if(true){ 
-                    console.log("\n\t ------ RESULTS ------\n");
-                    for(key in output){
-                        console.log(key);
-                        if(typeof(output[key]) != "string"){
-                            for(value in output[key]){
-                                console.log(value);
-                                console.log(JSON.stringify(output[key][value]));
-                            }
-                        } else{
-					
-                            if(key == timeKey){
-                                console.log(parseFloat(output[key]).toFixed(4))
-                            } else{
-                                console.log(output[key]);
-                            }
+                var output = res[0];
+                RecordData.findOne({_id: ecgDocId}, function (err, doc){
+                    
+                    doc.rPeaks = output.rpeaks;
+                    doc.pvcEvents = output.pvcevents;
+                    doc.rrIntervals = output.rrintervals;
+                    doc.hrvFeatures = output.hrvfeatures;
+                    
+                    doc.save(function(err, rd){
+                        if(err){
+                            console.log(err);
+                        }else{
+                            console.log("MEAN: " + rd.hrvFeatures.features.mean);
                         }
-                        console.log("\n")
-                    }
-                }
-                console.log("here");
+                    });
+                });
+                
                 var engineTime = parseFloat(output[timeKey])
                 console.log("\n\t ------ Summary ------\n");
                 console.log("A) OSPP Engine Procesing Time : " + engineTime.toFixed(4) + " seconds")				
@@ -182,7 +176,8 @@ function readPipelineKeys(){
 }
 
 
-function readData(){
+function readData(chOne){
+    var dataArr = chOne.slice();
     var data = [];
     for(i = 0; i < chOne.length; i++) {
         data.push(parseInt(chOne[i]));

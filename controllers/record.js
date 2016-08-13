@@ -3,7 +3,7 @@ var Patient = require('../models/Patient');
 var RecordData = require('../models/RecordData');
 var configFile = require('../config');
 var autobahn = require('autobahn');
-var metro = require('../metropolia');
+var ospp = require('../ospp');
 
 module.exports = {
     get: function (req, res){
@@ -37,9 +37,14 @@ module.exports = {
         recordData.save(function(err, rd){
             if(err){
                 console.error(err);
+            }else{
+                var d = rd.chOne.split(",");
+                var id = rd._id;
+                var ecgDoc = {"id": id,
+                                "chOne": d
+                             };
+                ospp.process(ecgDoc);
             }
         });
-        var d = recordData.chOne.split(",");
-        metro.osppAnalyse(d);
     }
 }
