@@ -1,14 +1,6 @@
-
-// Simple Node.js script to connect to OSPP engine for requesting ECG signal feature analysis. 
-
 // Author : Awais Aslam
 // Email : awais.aslam@oulu.fi
 // Date : 28 July 2016 
-
-// How to run for command line
-// node metropolia.js ecg.5s.txt ospp-results.txt true
-
-// Command Line Arguments: script name, input file name, output file name, show Result
 
 // Library Dependancies. 
 // Autobahn is required to connect to WAMP Router. 
@@ -16,29 +8,14 @@
 
 // fs is required to read/write files. 
 
-// run npm install autobahn in the same directory where metropolia.js is. 
-
-////////////////////////////////////////////////////////////////////
-// Requirements
-
 var autobahn = require('autobahn');
 var fs = require('fs');
-var RecordData = require('./models/RecordData'); 
+var RecordData = require('./models/RecordData');
+var appConfig = require('./config/appConfig');
 
-// Application Parameters Initialization
-
-var realmName = "ospp-engine"   							// realm-name 
-var wampRouterUrl = "ws://185.38.3.239:8000/ws"				// WAMP Router URL
-
-var pipelineConfigPath = "data/config/pipeline-config.json"	// Pipeline Configuration File Path
-
-var openUrl = "com.ospp.session.open";						// Open Session Remote procedure is registered on this URL.
-var closeUrl = "com.ospp.session.close";					// Close Session Remote procedure is registered on this URL.
-
-// Global Variables. 
+var pipelineConfigPath = "config/pipeline-config.json"
+ 
 var pipelineKeys;
-var inFilePath = "data/in/ecg.1m.txt";
-var  outFilePath = "data/out/ecg.1m.txt";
 var inputData = [];
 
 module.exports = {
@@ -48,11 +25,11 @@ module.exports = {
         inputData.push(data);
     
         console.log("Waiting for connection to OSPP live engine...");
-        console.log(wampRouterUrl);
+        console.log(appConfig.WAMP_ROUTER_URL);
      
         var connection = new autobahn.Connection({
-            url: wampRouterUrl,
-            realm: realmName}
+            url: appConfig.WAMP_ROUTER_URL,
+            realm: appConfig.REALM_NAME}
         );
         
         connection.open();
@@ -67,11 +44,12 @@ module.exports = {
 
            var ecgDoc = inputData.shift();
            var ecgDocId = ecgDoc.id;
-	       var ecgSignal = readData(ecgDoc.chOne);  
+	       var ecgSignal = formatOSPPBoundData(ecgDoc.chOne);
+           //var pipelineKeys = appConfig.PIPELINE_KEYS;
 
-	       console.log("Step.1) Sending session open request to OSPP ...\n") 
+	       console.log("Sending session open request to OSPP ...\n") 
 
-	       session.call(openUrl, [pipelineKeys]).then(
+	       session.call(appConfig.OPEN_URL, [pipelineKeys]).then(
                function (res) {
                    var configUrl = res['configUrl']
                    session.subscribe(configUrl,onReceiveConfig);
@@ -83,7 +61,7 @@ module.exports = {
                }
            );
             function onReceiveConfig(response){
-                console.log("Step.2) Configuration Info received from OSPP.");
+                console.log("Configuration Info received from OSPP.");
                 config = response[0]
                 if(config['status']['resultCode'] == 1){
                     sessionId = config['config'].sessionId;
@@ -105,7 +83,7 @@ module.exports = {
             }
             
             function publishData(){
-                console.log("Step.3) Publishing input data to OSPP Engine");
+                console.log("Publishing input data to OSPP Engine");
                 t1 = new Date().getTime() / 1000;
                 session.publish(streamUrl, [ecgSignal]);
             }
@@ -113,7 +91,7 @@ module.exports = {
                 t2 = new Date().getTime() / 1000;
                 var totalTime = t2 - t1	
                 var timeKey = 'processingTime'			
-                console.log("Step.4) Results Received Back from OSPP Engine");
+                console.log("Results Received from OSPP Engine");
                 
                 var output = res[0];
                 RecordData.findOne({_id: ecgDocId}, function (err, doc){
@@ -125,33 +103,26 @@ module.exports = {
                     
                     doc.save(function(err, rd){
                         if(err){
-                            console.log(err);
+                            console.error(err);
                         }else{
-                            console.log("MEAN: " + rd.hrvFeatures.features.mean);
+                            console.log("Record update successful");
                         }
                     });
                 });
                 
                 var engineTime = parseFloat(output[timeKey])
                 console.log("\n\t ------ Summary ------\n");
-                console.log("A) OSPP Engine Procesing Time : " + engineTime.toFixed(4) + " seconds")				
-                console.log("B) Data Transmission Time (Both ways) : " + (totalTime - engineTime).toFixed(4) + " seconds")
-                console.log("C) Request Execution Time : " + (totalTime).toFixed(4) + " seconds")
-                
-                fs.writeFile(outFilePath,JSON.stringify(output),function(err) {
-                    if(err) {
-                        console.log(err);
-                    }
-                });
-                console.log("C) Results are written to the file : " + outFilePath + "\n")
+                console.log("A) OSPP Engine Procesing Time : " + engineTime.toFixed(4) + " seconds");				
+                console.log("B) Data Transmission Time (Both ways) : " + (totalTime - engineTime).toFixed(4) + " seconds");
+                console.log("C) Request Execution Time : " + (totalTime).toFixed(4) + " seconds");
                 
                 setTimeout(closeSession,500);
             
             }
             
             function closeSession(){
-                console.log("Step.5) Closing the Session.");
-                session.call(closeUrl, [sessionId]).then(
+                console.log("Closing the Session.");
+                session.call(appConfig.CLOSE_URL, [sessionId]).then(
                     function (res) {
                         console.log(res['status']['resultMsg'] + " - Session ID : " + sessionId);
                     },
@@ -169,14 +140,13 @@ module.exports = {
 function readPipelineKeys(){
     try{
         pipelineKeys = JSON.parse(fs.readFileSync(pipelineConfigPath));
-        console.log("Pipeline Keys : "  + pipelineKeys);
     } catch(e){
         console.log("ERROR: Incorrect Pipeline Configuration.");
     }	  
 }
 
 
-function readData(chOne){
+function formatOSPPBoundData(chOne){
     var dataArr = chOne.slice();
     var data = [];
     for(i = 0; i < chOne.length; i++) {

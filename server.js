@@ -6,7 +6,7 @@ var auth = require('./controllers/auth');
 var patient = require('./controllers/patient');
 var record = require('./controllers/record');
 var recordData = require('./controllers/recordData');
-var config = require('./config');
+var config = require('./config/appConfig');
 
 
 app.use(bodyParser.json());
@@ -20,6 +20,7 @@ app.use(function(req, res, next){
 app.get('/api/records', record.get);
 app.get('/api/record-details', recordData.get);
 app.get('/api/patients', patient.get);
+
 
 app.post('/api/record', record.post);
 

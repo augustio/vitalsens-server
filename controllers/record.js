@@ -1,18 +1,37 @@
 var Record = require('../models/Record');
 var Patient = require('../models/Patient');
 var RecordData = require('../models/RecordData');
-var configFile = require('../config');
+var configFile = require('../config/appConfig');
 var autobahn = require('autobahn');
 var ospp = require('../ospp');
 
 module.exports = {
+    
     get: function (req, res){
-        Record.find({}).exec(function(err, result){
-            if(err){
-                console.error(err);
-            }
-            res.send(result);
-        });
+        if(req.query.timeStamp == null && req.query.patientId == null){
+            Record.find({}).exec(function(err, result){
+                if(err){
+                    console.error(err);
+                }
+                res.send(result);
+            });
+        }else if(req.query.timeStamp != null && req.query.patientId != null){
+            Record.findOne({timeStamp: req.query.timeStamp, 
+                            patientId: req.query.patientId}).exec(function(err, result){
+                if(err){
+                    console.error(err);
+                }
+                res.send(result);
+            });
+        }else if(req.query.patientId != null){
+            Record.find({patientId: req.query.patientId}).exec(function(err, result){
+                if(err){
+                    console.error(err);
+                }
+                res.send(result);
+            });
+        }
+        
     },
     post: function(req, res){
         var recordData = new RecordData(req.body);
