@@ -2,6 +2,7 @@ var User = require('../models/User');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 var appConfig = require('../config/appConfig');
+var bcrypt = require('bcrypt');
 
 module.exports = {
     register: function (req, res){
@@ -28,19 +29,25 @@ module.exports = {
         
         User.findOne({
             email: req.body.email
-        }, function(err, existingUser){
-            if(err){
-                return res.status(409).send({message: 'Email not found'});
+        }, function(err, user){
+            if(!user){
+                return res.status(409).send({
+                    message: 'Email invalid'
+                });
             }
             
-            bcrypt.compare(req.body.pwd, existingUser.pwd, function(err, result){
+            bcrypt.compare(req.body.pwd, user.pwd, function(err, result){
                 if(err){
-                    return res.status(409).send({message: 'Wrong password'});
+                    return res.status(409).send({
+                        message: 'Password invalid'
+                    });
                 }
                 
-                res.status(200).send({token: createToken(existingUser)});
-            })
-        })
+                res.status(200).send({
+                    token: createToken(user)
+                });
+            });
+        });
     }
 };
 
