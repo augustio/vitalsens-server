@@ -1,6 +1,7 @@
 var User = require('../models/User');
 var jwt = require('jwt-simple');
 var moment = require('moment');
+var appConfig = require('../config/appConfig');
 
 module.exports = {
     register: function (req, res){
@@ -22,6 +23,24 @@ module.exports = {
                 res.status(200).send({token: createToken(result)});
             });
         });
+    },
+    login: function (req, res){
+        
+        User.findOne({
+            email: req.body.email
+        }, function(err, existingUser){
+            if(err){
+                return res.status(409).send({message: 'Email not found'});
+            }
+            
+            bcrypt.compare(req.body.pwd, existingUser.pwd, function(err, result){
+                if(err){
+                    return res.status(409).send({message: 'Wrong password'});
+                }
+                
+                res.status(200).send({token: createToken(existingUser)});
+            })
+        })
     }
 };
 
@@ -33,5 +52,5 @@ function createToken(user){
     };
 
     //Set a more elaborate secret in a configuration file
-    return jwt.encode(payload, 'secret');
+    return jwt.encode(payload, appConfig.TOKEN_SECRET);
 }

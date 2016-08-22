@@ -11,6 +11,8 @@ module.exports = {
             }
         });
     },
+    
+    TOKEN_SECRET: "this is a secret", //set this to a more elaborate value
    
     REALM_NAME: "ospp-engine",
     

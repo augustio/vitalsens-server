@@ -6,27 +6,25 @@ var auth = require('./controllers/auth');
 var patient = require('./controllers/patient');
 var record = require('./controllers/record');
 var recordData = require('./controllers/recordData');
-var config = require('./config/appConfig');
+var appConfig = require('./config/appConfig');
+var checkAuthenticated = require('./services/checkAuthenticated');
+var cors = require('./services/cors');
 
 
 app.use(bodyParser.json());
 
-app.use(function(req, res, next){
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    next();
-});
+app.use(cors);
 
-app.get('/api/records', record.get);
-app.get('/api/record-details', recordData.get);
-app.get('/api/patients', patient.get);
+app.get('/api/records', checkAuthenticated, record.get);
+app.get('/api/record-details', checkAuthenticated, recordData.get);
+app.get('/api/patients', checkAuthenticated, patient.get);
 
 
 app.post('/api/record', record.post);
-
 app.post('/auth/register', auth.register);
+app.post('/auth/login', auth.login);
 
-config.connectDb();
+appConfig.connectDb();
 
 var server = app.listen(5000, function(){
     console.log("Listening on port 5000");
