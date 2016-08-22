@@ -37,15 +37,15 @@ module.exports = {
             }
             
             bcrypt.compare(req.body.pwd, user.pwd, function(err, result){
-                if(err){
+                if(result){
+                    res.status(200).send({
+                        token: createToken(user)
+                    });
+                }else{
                     return res.status(409).send({
                         message: 'Password invalid'
                     });
                 }
-                
-                res.status(200).send({
-                    token: createToken(user)
-                });
             });
         });
     }
