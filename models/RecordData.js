@@ -14,6 +14,6 @@ var recordDataSchema = mongoose.Schema({
     rrIntervals: {type: {}},
     hrvFeatures: {type: {}} 
 });
-recordDataSchema.index({sequenceId: 1, timeStamp: 1, patientId: 1}, {unique: true});
+recordDataSchema.index({sequenceId: 1, timeStamp: 1, patientId: 1, type: 1}, {unique: true});
 
 module.exports = mongoose.model('RecordData', recordDataSchema);
