@@ -54,7 +54,7 @@ module.exports = {
         recordData.save(function(err, rd){
             if(err){
                 console.error(err);
-                res.status(401).send({message: "Duplicate record not allowed"});
+                res.status(409).send({message: "Duplicate record not allowed"});
             }else{
                 res.status(200).send({message: "record successfully stored"});
                 var d = rd.chOne.split(",");
