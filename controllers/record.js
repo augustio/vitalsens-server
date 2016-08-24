@@ -46,8 +46,6 @@ module.exports = {
                 console.error(err);
             }
         });
-        res.status(200);
-        res.send(JSON.stringify(recordData));
         patient.save(function(err, pat){
             if(err){
                 console.error(err);
@@ -57,6 +55,7 @@ module.exports = {
             if(err){
                 console.error(err);
             }else{
+                res.status(200).send({message: "record successfully stored"});
                 var d = rd.chOne.split(",");
                 var id = rd._id;
                 var ecgDoc = {"id": id,
