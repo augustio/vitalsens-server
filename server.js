@@ -15,6 +15,8 @@ app.use(bodyParser.json());
 
 app.use(cors);
 
+app.use(express.static('../vitalsens-client/dist'));
+
 app.get('/api/records', checkAuthenticated, record.get);
 app.get('/api/record-details', checkAuthenticated, recordData.get);
 app.get('/api/patients', checkAuthenticated, patient.get);
