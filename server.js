@@ -11,7 +11,8 @@ var checkAuthenticated = require('./services/checkAuthenticated');
 var cors = require('./services/cors');
 
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50', extended: true}));
 
 app.use(cors);
 
