@@ -8,26 +8,15 @@ var ospp = require('../ospp');
 module.exports = {
     
     get: function (req, res){
-        if(req.query.timeStamp == null && req.query.patientId == null){
-            Record.find({}).exec(function(err, result){
-                if(err){
-                    console.error(err);
-                }
-                res.send(result);
-            });
-        }else if(req.query.timeStamp != null &&
-                 req.query.patientId != null &&
-                 req.query.type != null){
-            Record.findOne({timeStamp: req.query.timeStamp,
-                            patientId: req.query.patientId,
-                            type: req.query.type}).exec(function(err, result){
-                if(err){
-                    console.error(err);
-                }
-                res.send(result);
-            });
-        }else if(req.query.patientId != null){
+        if(req.query.patientId != null){
             Record.find({patientId: req.query.patientId}).exec(function(err, result){
+                if(err){
+                    console.error(err);
+                }
+                res.send(result);
+            });
+        }else{
+            Record.find({}).exec(function(err, result){
                 if(err){
                     console.error(err);
                 }
@@ -44,21 +33,24 @@ module.exports = {
             "type": recordData.type
         });
         var patient = new Patient({"patientId": recordData.patientId});
-        record.save(function(err, rec){
-            if(err){
-                console.error(err);
-            }
-        });
-        patient.save(function(err, pat){
-            if(err){
-                console.error(err);
-            }
-        });
+        
         recordData.save(function(err, rd){
             if(err){
                 console.error(err);
                 res.status(409).send({message: "Duplicate record not allowed"});
             }else{
+                
+                record.save(function(err, rec){
+                    if(err){
+                        console.error(err);
+                    }
+                });
+                patient.save(function(err, pat){
+                    if(err){
+                        console.error(err);
+                    }
+                });
+                
                 res.status(200).send({message: "record successfully stored"});
                 var d = rd.chOne.split(",");
                 var id = rd._id;
