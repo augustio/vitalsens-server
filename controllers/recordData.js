@@ -27,8 +27,9 @@ module.exports = {
                  req.query.patientId != null && 
                  req.query.type != null){
             RecordData.find({type: req.query.type,
-                                timeStamp: req.query.timeStamp, 
-                                patientId: req.query.patientId}).exec(function(err, result){
+                             timeStamp: req.query.timeStamp,
+                             patientId: req.query.patientId},
+                            'type timeStamp patientId').exec(function(err, result){
                 if(err){
                     console.error(err);
                 }

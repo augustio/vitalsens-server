@@ -15,9 +15,12 @@ module.exports = {
                 }
                 res.send(result);
             });
-        }else if(req.query.timeStamp != null && req.query.patientId != null){
-            Record.findOne({timeStamp: req.query.timeStamp, 
-                            patientId: req.query.patientId}).exec(function(err, result){
+        }else if(req.query.timeStamp != null &&
+                 req.query.patientId != null &&
+                 req.query.type != null){
+            Record.findOne({timeStamp: req.query.timeStamp,
+                            patientId: req.query.patientId,
+                            type: req.query.type}).exec(function(err, result){
                 if(err){
                     console.error(err);
                 }
