@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var recordDataSchema = mongoose.Schema({
     sequenceId: {type: Number, required: true},
@@ -15,5 +16,6 @@ var recordDataSchema = mongoose.Schema({
     hrvFeatures: {type: {}} 
 });
 recordDataSchema.index({sequenceId: 1, timeStamp: 1, patientId: 1, type: 1}, {unique: true});
+recordDataSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('RecordData', recordDataSchema);
