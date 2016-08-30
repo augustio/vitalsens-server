@@ -52,12 +52,13 @@ module.exports = {
                 });
                 
                 res.status(200).send({message: "record successfully stored"});
-                var d = rd.chOne.split(",");
-                var id = rd._id;
-                var ecgDoc = {"id": id,
-                                "chOne": d
-                             };
-                ospp.process(ecgDoc);
+                var dataType = rd.type.toLowerCase();
+                if(dataType.indexOf("ecg") != -1){
+                    var ecgDoc = {"id": rd._id,
+                                  "chOne":rd.chOne
+                                 };
+                    ospp.process(ecgDoc);
+                }
             }
         });
     }
