@@ -6,23 +6,13 @@
 // Autobahn is required to connect to WAMP Router. 
 // http://autobahn.ws/js/
 
-// fs is required to read/write files. 
-
 var autobahn = require('autobahn');
-var fs = require('fs');
 var RecordData = require('./models/RecordData');
 var appConfig = require('./config/appConfig');
 
-var pipelineConfigPath = "config/pipeline-config.json"
- 
-var pipelineKeys;
-var inputData = [];
-
 module.exports = {
     
-    process: function(data){
-        readPipelineKeys();
-        inputData.push(data);
+    process: function(ecgDoc){
     
         console.log("Waiting for connection to OSPP live engine...");
         console.log(appConfig.WAMP_ROUTER_URL);
@@ -41,11 +31,11 @@ module.exports = {
 
 	       var sessionId, streamUrl, outputUrl;
 	       var t1,t2;
-
-           var ecgDoc = inputData.shift();
+           var pipelineKeys = ["rpeaks","rrintervals","pvcevents","hrvfeatures"];
            var ecgDocId = ecgDoc.id;
 	       var ecgSignal = formatOSPPBoundData(ecgDoc.chOne);
-           //var pipelineKeys = appConfig.PIPELINE_KEYS;
+            
+           console.log("Recieved Id: " + ecgDoc.id);
 
 	       console.log("Sending session open request to OSPP ...\n") 
 
@@ -105,6 +95,7 @@ module.exports = {
                         if(err){
                             console.error(err);
                         }else{
+                            console.log("Saved Id: " + ecgDoc.id);
                             console.log("Record update successful");
                         }
                     });
@@ -132,19 +123,10 @@ module.exports = {
                         }
                     }
                 );
-            }	
+            }
         };
     }
 };
-
-function readPipelineKeys(){
-    try{
-        pipelineKeys = JSON.parse(fs.readFileSync(pipelineConfigPath));
-    } catch(e){
-        console.log("ERROR: Incorrect Pipeline Configuration.");
-    }	  
-}
-
 
 function formatOSPPBoundData(chOne){
     var dataArr = chOne.slice();
