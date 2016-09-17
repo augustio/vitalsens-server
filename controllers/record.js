@@ -1,9 +1,6 @@
 var Record = require('../models/Record');
 var Patient = require('../models/Patient');
 var RecordData = require('../models/RecordData');
-var configFile = require('../config/appConfig');
-var autobahn = require('autobahn');
-var ospp = require('../ospp');
 
 module.exports = {
     
@@ -27,38 +24,12 @@ module.exports = {
     },
     post: function(req, res){
         var recordData = new RecordData(req.body);
-        var record = new Record({
-            "timeStamp": recordData.timeStamp,
-            "patientId": recordData.patientId,
-            "type": recordData.type
-        });
-        var patient = new Patient({"patientId": recordData.patientId});
         
         recordData.save(function(err, rd){
             if(err){
-                console.error(err);
                 res.status(409).send({message: "Duplicate record not allowed"});
             }else{
-                
-                record.save(function(err, rec){
-                    if(err){
-                        console.error(err);
-                    }
-                });
-                patient.save(function(err, pat){
-                    if(err){
-                        console.error(err);
-                    }
-                });
-                
-                res.status(200).send({message: "record successfully stored"});
-                var dataType = rd.type.toLowerCase();
-                if(dataType.indexOf("ecg") != -1){
-                    var ecgDoc = {"id": rd._id,
-                                  "chOne":rd.chOne
-                                 };
-                    ospp.process(ecgDoc);
-                }
+                res.status(200).send({data: recordData});
             }
         });
     }

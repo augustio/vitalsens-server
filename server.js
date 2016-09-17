@@ -8,6 +8,9 @@ var record = require('./controllers/record');
 var recordData = require('./controllers/recordData');
 var appConfig = require('./config/appConfig');
 var checkAuthenticated = require('./services/checkAuthenticated');
+var osppAnalyse = require('./services/osppAnalyse');
+var savePatient = require('./services/savePatient');
+var saveRecord = require('./services/saveRecord');
 var cors = require('./services/cors');
 
 
@@ -23,7 +26,7 @@ app.get('/api/record-details', checkAuthenticated, recordData.get);
 app.get('/api/patients', checkAuthenticated, patient.get);
 
 
-app.post('/api/record', record.post);
+app.post('/api/record', savePatient, saveRecord, osppAnalyse, record.post);
 app.post('/auth/register', auth.register);
 app.post('/auth/login', auth.login);
 
