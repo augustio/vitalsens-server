@@ -29,7 +29,13 @@ module.exports = {
             if(err){
                 res.status(409).send({message: "Duplicate record not allowed"});
             }else{
-                res.status(200).send({data: recordData});
+                var result = {
+                    "rPeaks": rd.rPeaks,
+                    "pvcEvents": rd.pvcEvents,
+                    "rrIntervals": rd.rrIntervals,
+                    "hrvFeatures": rd.hrvFeatures 
+                }
+                res.status(200).send({data: result});
             }
         });
     }
