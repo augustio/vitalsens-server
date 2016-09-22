@@ -38,5 +38,27 @@ module.exports = {
                 res.status(200).send({data: result});
             }
         });
+    },
+    delete: function(req, res){
+        Record.findOne({
+            patientId: req.body.patientId,
+            timeStamp: req.body.timeStamp,
+            type: req.body.type
+        }, function(err, record){
+            if(err){
+                res.status(409).send({message: "Record not found, cannot be deleted"});
+            }else if(record != null){
+                record.remove(function(err, rec){
+                    if(err){
+                        console.log(err);
+                        res.status(409).send({message: "Encountered some problems deleting record"});
+                    }else{
+                        res.status(200).send({message: "Deleted record" + rec._id});
+                    }
+                });
+            }else{
+                res.status(409).send({message: "Not sure what happened"});
+            }
+        });
     }
 }
