@@ -22,5 +22,7 @@ module.exports = {
     
     OPEN_URL: "com.ospp.session.open",
     
-    CLOSE_URL: "com.ospp.session.close"
+    CLOSE_URL: "com.ospp.session.close",
+    
+    NAN: -4096
 }

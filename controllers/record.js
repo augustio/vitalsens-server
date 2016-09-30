@@ -22,13 +22,28 @@ module.exports = {
         }
         
     },
+    
     post: function(req, res){
         var recordData = new RecordData(req.body);
+        var record = new Record({
+            "timeStamp": recordData.timeStamp,
+            "patientId": recordData.patientId,
+            "type": recordData.type
+        });
+        var patient = new Patient({"patientId": recordData.patientId});
         
         recordData.save(function(err, rd){
             if(err){
                 res.status(409).send({message: "Duplicate record not allowed"});
             }else{
+                record.save(function(err, r){
+                    if(err)
+                        console.log("Duplicate records not allowed");
+                });
+                patient.save(function(err, p){
+                    if(err)
+                        console.log("Duplicate patients not allowed");
+                });
                 var result = {
                     "rPeaks": rd.rPeaks,
                     "pvcEvents": rd.pvcEvents,
@@ -39,26 +54,25 @@ module.exports = {
             }
         });
     },
+    
     delete: function(req, res){
-        Record.findOne({
-            patientId: req.body.patientId,
-            timeStamp: req.body.timeStamp,
-            type: req.body.type
-        }, function(err, record){
-            if(err){
-                res.status(409).send({message: "Record not found, cannot be deleted"});
-            }else if(record != null){
-                record.remove(function(err, rec){
-                    if(err){
-                        console.log(err);
-                        res.status(409).send({message: "Encountered some problems deleting record"});
-                    }else{
-                        res.status(200).send({message: "Deleted record" + rec._id});
-                    }
-                });
-            }else{
-                res.status(409).send({message: "Not sure what happened"});
-            }
+        RecordData.remove({
+            patientId: req.query.patientId,
+            timeStamp: req.query.timeStamp,
+            type: req.query.type
+        }, function(err, rdRes){
+            console.log("Number of Record data removed: " + rdRes.result.n);
+            Record.remove({
+                patientId: req.query.patientId,
+                timeStamp: req.query.timeStamp,
+                type: req.query.type
+            }, function(err, rRes){
+                if(rRes.result.n < 1){
+                    res.status(409).send({message: "Record not found"});
+                }else{
+                    res.status(200).send({message: "Record deleted"});
+                }
+            });
         });
     }
 }

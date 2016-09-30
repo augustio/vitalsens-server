@@ -1,4 +1,6 @@
 var Patient = require('../models/Patient');
+var Record = require('../models/Record');
+var RecordData = require('../models/RecordData');
 
 module.exports = {
     get: function (req, res){
@@ -20,22 +22,18 @@ module.exports = {
     },
     
     delete: function(req, res){
-        if(req.body.patientId != null){
-            Patient.findOne({patientId: req.body.patientId}, function(err, patient){
-                if (patient != null){
-                    patient.remove(function(err, p){
-                        if(err){
-                            console.log(err);
-                            res.status(409).send({message: "Encountered some problems deleting patient " + patient.patientId});
-                        }else{
-                            console.log("Deleted patient " + p.patientId);
-                            res.status(200).send({message: "Deleted patient " + p.patientId});
-                        }
-                    });
-                }else{
-                    res.status(409).send({message: "Patient " + req.body.patientId + " not found!"});
-                }
+        RecordData.remove({patientId: req.query.patientId}, function(err, rdRes){
+            console.log("Number of Record data removed: " + rdRes.result.n);
+            Record.remove({patientId: req.query.patientId}, function(err, rRes){
+                console.log("Number of Records removed: " + rRes.result.n);
+                Patient.remove({patientId: req.query.patientId}, function(err, pRes){
+                    if(pRes.result.n < 1){
+                        res.status(409).send({message: "Patient not found"});
+                    }else{
+                        res.status(200).send({message: "Patient " + req.query.patientId + " deleted"})
+                    }
+                });
             });
-        }
+        });
     }
 }

@@ -9,11 +9,6 @@ var recordData = require('./controllers/recordData');
 var appConfig = require('./config/appConfig');
 var checkAuthenticated = require('./services/checkAuthenticated');
 var osppAnalyse = require('./services/osppAnalyse');
-var savePatient = require('./services/savePatient');
-var saveRecord = require('./services/saveRecord');
-var deleteRecordData = require('./services/deleteRecordData');
-var deletePatientRecData = require('./services/deletePatientRecData');
-var deletePatientRecords = require('./services/deletePatientRecords');
 var cors = require('./services/cors');
 
 
@@ -29,12 +24,12 @@ app.get('/api/record-details', checkAuthenticated, recordData.get);
 app.get('/api/patients', checkAuthenticated, patient.get);
 
 
-app.post('/api/record', savePatient, saveRecord, osppAnalyse, record.post);
+app.post('/api/record', osppAnalyse, record.post);
 app.post('/auth/register', auth.register);
 app.post('/auth/login', auth.login);
 
-app.delete('/api/record', deleteRecordData, record.delete);
-app.delete('/api/patient', deletePatientRecData, deletePatientRecords, patient.delete);
+app.delete('/api/record', record.delete);
+app.delete('/api/patient', patient.delete);
 
 appConfig.connectDb();
 
