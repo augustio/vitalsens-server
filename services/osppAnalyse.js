@@ -1,5 +1,6 @@
 var autobahn = require('autobahn');
 var RecordData = require('../models/RecordData');
+var Record = require('../models/Record');
 var appConfig = require('../config/appConfig');
 
 module.exports = function(req, res, next){
@@ -22,22 +23,40 @@ module.exports = function(req, res, next){
             var data = [];
             var chOne = req.body.chOne;
             
+            console.log("PATIENT ID: " + req.body.patientId);
             for(i = 0; i < chOne.length; i++) {
-                data.push(parseInt(chOne[i]));
+                var sample = parseInt(chOne[i]);
+                if(sample == appConfig.NAN)
+                    sample == NaN;
+                data.push(sample);
             }
             var ecgDoc = {'ch1': data};
-        
-            session.call(appConfig.OPEN_URL, [pipelineKeys]).then(
-                function (res) {
-                    var configUrl = res['configUrl']
-                    session.subscribe(configUrl,onReceiveConfig);
-                },
-                function (err) {
-                    if (err.error !== 'wamp.error.no_such_procedure') {
-                        console.log('Session open request failed.');
-                    }
+            Record.findOne({
+                patientId: req.body.patientId,
+                timeStamp: req.body.timeStamp,
+                type: req.body.type
+            }, function(err, existingRec){
+                if(existingRec){
+                    sessionId = existingRec.sessionId;
+                    streamUrl = existingRec.streamUrl;
+                    outputUrl = existingRec.outputUrl;
+                    console.log("Session params retrieved: " + sessionId + "\n" + streamUrl + "\n" + outputUrl + "\n");
+                    subscribeToResults();
+                    publishData();
+                }else{
+                    session.call(appConfig.OPEN_URL, [pipelineKeys]).then(
+                        function (res) {
+                            var configUrl = res['configUrl']
+                            session.subscribe(configUrl,onReceiveConfig);
+                        },
+                        function (err) {
+                            if (err.error !== 'wamp.error.no_such_procedure') {
+                                console.log('Session open request failed.');
+                            }
+                        }
+                    );
                 }
-            );
+            });
             
             function onReceiveConfig(response){
                 console.log("Configuration Info received from OSPP.");
@@ -47,7 +66,9 @@ module.exports = function(req, res, next){
                     sessionId = config['config'].sessionId;
                     streamUrl = config['config'].streamUrl;
                     outputUrl = config['config'].outputUrl;
-                
+                    req.body.sessionId = sessionId;
+                    req.body.streamUrl = streamUrl;
+                    req.body.outputUrl = outputUrl;
                     console.log("ConfigInfo - Session ID : " + sessionId);
                     console.log("ConfigInfo - Stream Url : " + streamUrl);
                     console.log("ConfigInfo - Output Url : " + outputUrl);
@@ -92,23 +113,28 @@ module.exports = function(req, res, next){
                 console.log("B) Data Transmission Time (Both ways) : " + (totalTime - engineTime).toFixed(4) + " seconds");
                 console.log("C) Request Execution Time : " + (totalTime).toFixed(4) + " seconds");
 
-                closeSession();
-                next();
+                connection.close();
             }
+            connection.onclose = function(reason, details){
+                console.log("Connection closed with the reason: " + reason + "\n");
+                next();
+            };
         
-            function closeSession(){
+            /*function closeSession(){
                 console.log("Closing the Session.");
                 session.call(appConfig.CLOSE_URL, [sessionId]).then(
                     function (res) {
                         console.log(res['status']['resultMsg'] + " - Session ID : " + sessionId);
+                        next();
                     },
                     function (err) {
                         if (err.error !== 'wamp.error.no_such_procedure') {
                             console.log('Session close request failed.');
                         }
+                        next();
                     }
                 );
-            }
+            }*/
         };
     }else{
         next();

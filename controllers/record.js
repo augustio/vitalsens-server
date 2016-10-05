@@ -24,11 +24,27 @@ module.exports = {
     },
     
     post: function(req, res){
-        var recordData = new RecordData(req.body);
+        var recordData = new RecordData({
+            "timeStamp": req.body.timeStamp,
+            "patientId": req.body.patientId,
+            "start": req.body.start,
+            "end": req.body.end,
+            "type": req.body.type,
+            "chOne": req.body.chOne,
+            "chTwo": req.body.chTwo,
+            "chThree": req.body.chThree,
+            "rPeaks": req.body.rPeaks,
+            "pvcEvents": req.body.pvcEvents,
+            "rrIntervals": req.body.rrIntervals,
+            "hrvFeatures": req.body.hrvFeatures
+        });
         var record = new Record({
-            "timeStamp": recordData.timeStamp,
-            "patientId": recordData.patientId,
-            "type": recordData.type
+            "timeStamp": req.body.timeStamp,
+            "patientId": req.body.patientId,
+            "type": req.body.type,
+            "sessionId": req.body.sessionId,
+            "streamUrl": req.body.streamUrl,
+            "outputUrl": req.body.outputUrl
         });
         var patient = new Patient({"patientId": recordData.patientId});
         
