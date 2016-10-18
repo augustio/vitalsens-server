@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var dbURL = "mongodb://vitalsensAdmin:vitalsensAdmin@ds011482.mlab.com:11482/vitalsens";
+var dbURL = "mongodb://vitalsensAdmin:vitalsensAdmin@ds061256-a0.mlab.com:61256,ds061256-a1.mlab.com:61256/<dbname>?replicaSet=rs-ds061256";
 
 module.exports = {
     //Database connection configuration
