@@ -48,12 +48,16 @@ module.exports = {
                 }
             });
         });
-    }
+    },
 };
 
 function createToken(user){
     var payload = {
-        sub: user._id,
+        user:{
+            _id: user._id,
+            email: user.email,
+            role: user.role
+        },
         iat: moment().unix(),
         exp: moment().add(48, 'minutes').unix()
     };

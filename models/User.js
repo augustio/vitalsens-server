@@ -5,7 +5,8 @@ var SALT_WORK_FACTOR = 10;
 
 var userSchema = mongoose.Schema({
     email: {type: String, required: true},
-    pwd: {type: String, required: true}
+    pwd: {type: String, required: true},
+    role: {type: String, required: true, default: "user"}
 });
 userSchema.index({email: 1}, {unique: true});
 userSchema.plugin(uniqueValidator);
