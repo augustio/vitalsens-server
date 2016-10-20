@@ -55,7 +55,7 @@ function createToken(user){
     var payload = {
         sub: user._id,
         iat: moment().unix(),
-        exp: moment().add(14, 'days').unix()
+        exp: moment().add(24, 'hours').unix()
     };
 
     //Set a more elaborate secret in a configuration file
