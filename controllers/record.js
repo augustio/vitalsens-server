@@ -6,14 +6,15 @@ module.exports = {
     
     get: function (req, res){
         if(req.query.patientId != null){
-            Record.find({patientId: req.query.patientId}).exec(function(err, result){
+            Record.find({patientId: req.query.patientId})
+                .sort({timeStamp: -1}).limit(100).exec(function(err, result){
                 if(err){
                     console.error(err);
                 }
                 res.send(result);
             });
         }else{
-            Record.find({}).exec(function(err, result){
+            Record.find({}).sort({timeStamp: -1}).limit(100).exec(function(err, result){
                 if(err){
                     console.error(err);
                 }
