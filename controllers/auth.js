@@ -59,7 +59,7 @@ function createToken(user){
             role: user.role
         },
         iat: moment().unix(),
-        exp: moment().add(48, 'minutes').unix()
+        exp: moment().add(48, 'hours').unix()
     };
 
     //Set a more elaborate secret in a configuration file
