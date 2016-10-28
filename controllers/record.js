@@ -14,7 +14,7 @@ module.exports = {
                 res.send(result);
             });
         }else{
-            Record.find({}).sort({timeStamp: -1}).exec(function(err, result){
+            Record.find({}, 'timeStamp patientId type').sort({timeStamp: -1}).exec(function(err, result){
                 if(err){
                     console.error(err);
                 }
@@ -23,7 +23,7 @@ module.exports = {
         }
         
     },
-    
+
     post: function(req, res){
         var recordData = new RecordData({
             "timeStamp": req.body.timeStamp,
