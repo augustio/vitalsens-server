@@ -23,6 +23,7 @@ app.get('/api/records', record.get);
 //app.get('/api/records', checkAuthenticated, record.get);
 app.get('/api/record-details', checkAuthenticated, recordData.get);
 app.get('/api/full-record-data', recordData.getFullRecordData);
+app.get('/api/record-analysis', recordData.getRecordAnalysis);
 app.get('/api/patients', checkAuthenticated, patient.get);
 
 

@@ -54,7 +54,8 @@ module.exports = {
             RecordData
                 .find({type: req.query.type,
                              timeStamp: req.query.timeStamp,
-                             patientId: req.query.patientId})
+                             patientId: req.query.patientId}, 
+                       'patientId timeStamp type chOne chTwo chThree start')
                 .sort('start')
                 .exec(function(err, result){
                 if(err){
@@ -64,15 +65,42 @@ module.exports = {
                     patientId: result[0].patientId,
                     timeStamp: result[0].timeStamp,
                     type: result[0].type,
-                    chOne: result[0].chOne,
-                    chTwo: result[0].chTwo,
-                    chThree: result[0].chThree
+                    chOne: [],
+                    chTwo: [],
+                    chThree: []
                 };
-                for(var i = 1; i < result.length; i++){
+                for(var i = 0; i < result.length; i++){
                     data.chOne = data.chOne.concat(result[i].chOne);
                     data.chTwo = data.chTwo.concat(result[i].chTwo);
                     data.chThree = data.chThree.concat(result[i].chThree);
                 }
+                res.send(data);
+            });
+        }
+    },
+    getRecordAnalysis: function(req, res){
+        if(req.query.timeStamp != null &&
+                 req.query.patientId != null &&
+                 req.query.type != null){
+            RecordData
+                .find({type: req.query.type,
+                             timeStamp: req.query.timeStamp,
+                             patientId: req.query.patientId},
+                      'patientId timeStamp type rPeaks pvcEvents rrIntervals hrvFeatures start')
+                .sort({start: 'descending'}).limit(1)
+                .exec(function(err, result){
+                if(err){
+                    console.error(err);
+                }
+                var data = {
+                    patientId: result[0].patientId,
+                    timeStamp: result[0].timeStamp,
+                    type: result[0].type,
+                    rPeaks: result[0].rPeaks,
+                    pvcEvents: result[0].pvcEvents,
+                    rrIntervals: result[0].rrIntervals,
+                    hrvFeatures: result[0].hrvFeatures
+                };
                 res.send(data);
             });
         }
