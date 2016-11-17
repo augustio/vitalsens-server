@@ -12,7 +12,7 @@ module.exports = {
         });
     },
     
-    TOKEN_SECRET: "this is a secret", //set this to a more elaborate value
+    TOKEN_SECRET: "v1t4753n553cr3tk3y", //set this to a more elaborate value
    
     REALM_NAME: "ospp-engine",
     

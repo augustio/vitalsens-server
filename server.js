@@ -21,18 +21,18 @@ app.use(express.static('public'));
 
 app.get('/api/records', record.get);
 //app.get('/api/records', checkAuthenticated, record.get);
-app.get('/api/record-details', checkAuthenticated, recordData.get);
+app.get('/api/record-details', checkAuthenticated.get, recordData.get);
 app.get('/api/full-record-data', recordData.getFullRecordData);
 app.get('/api/record-analysis', recordData.getRecordAnalysis);
-app.get('/api/patients', checkAuthenticated, patient.get);
+app.get('/api/patients', checkAuthenticated.get, patient.get);
 
 
-app.post('/api/record', osppAnalyse, record.post);
+app.post('/api/record', checkAuthenticated.post_modify, osppAnalyse, record.post);
 app.post('/auth/register', auth.register);
 app.post('/auth/login', auth.login);
 
-app.delete('/api/record', record.delete);
-app.delete('/api/patient', patient.delete);
+app.delete('/api/record', checkAuthenticated.post_modify, record.delete);
+app.delete('/api/patient', checkAuthenticated.post_modify, patient.delete);
 
 appConfig.connectDb();
 
