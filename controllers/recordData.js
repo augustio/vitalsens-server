@@ -16,7 +16,7 @@ module.exports = {
                 .find({type: req.query.type,
                              timeStamp: req.query.timeStamp,
                              patientId: req.query.patientId},
-                            'start end')
+                            'start end pEStart pEEnd')
                 .sort('start')
                 .exec(function(err, result){
                 if(err){
