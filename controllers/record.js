@@ -31,6 +31,8 @@ module.exports = {
             "start": req.body.start,
             "end": req.body.end,
             "type": req.body.type,
+            "pEStart": req.body.pEStart,
+            "pEEnd": req.body.pEEnd,
             "chOne": req.body.chOne,
             "chTwo": req.body.chTwo,
             "chThree": req.body.chThree,

@@ -8,6 +8,8 @@ var recordDataSchema = mongoose.Schema({
     start:{type: Number, required: true},
     end: {type: Number, required: true},
     type: {type: String, required: true},
+    pEStart: {type: Number, required: true, default: -1},
+    pEEnd: {type: Number, required: true, default: -1},
     chOne: {type: [Number]},
     chTwo: {type: [Number]},
     chThree: {type: [Number]},
