@@ -10,6 +10,7 @@ var recordSchema = mongoose.Schema({
     outputUrl: {type: String}
 });
 recordSchema.index({timeStamp: 1, patientId: 1, type: 1}, {unique: true});
+recordSchema.index({patientId: 1});
 recordSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Record', recordSchema);

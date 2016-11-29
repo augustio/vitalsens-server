@@ -20,6 +20,7 @@ var recordDataSchema = mongoose.Schema({
 });
 recordDataSchema.index({start: 1, timeStamp: 1, patientId: 1, type: 1}, {unique: true});
 recordDataSchema.index({timeStamp: 1, patientId: 1, type: 1});
+recordDataSchema.index({patientId: 1});
 recordDataSchema.plugin(uniqueValidator);
 
 recordDataSchema.pre('save', function(next){
