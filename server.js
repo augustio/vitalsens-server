@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({limit: '50', extended: true}));
 
 app.use(cors);
 
-app.use(express.static('public'));
+app.use(express.static('../vitalsens-client/dist'));
 
 app.get('/api/records', record.get);
 //app.get('/api/records', checkAuthenticated, record.get);
