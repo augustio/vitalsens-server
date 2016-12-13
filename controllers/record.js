@@ -33,6 +33,7 @@ module.exports = {
             "type": req.body.type,
             "pEStart": req.body.pEStart,
             "pEEnd": req.body.pEEnd,
+            "temp": req.body.temp,
             "chOne": req.body.chOne,
             "chTwo": req.body.chTwo,
             "chThree": req.body.chThree,
