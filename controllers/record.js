@@ -71,11 +71,11 @@ module.exports = {
                     "duration": Math.round((rd.end - rd.start)/1000),
                     "heartRate": calculateHeartRate(rd.rrIntervals.signal),
                     "pvcCount": rd.pvcEvents.locs.length,
-                    "minRPeak": Math.min(...rd.rPeaks.locS),
-                    "maxRPeak": Math.max(...rd.rPeaks.locS)
+                    "minRPeak": arrMin(rd.rPeaks.locS),
+                    "maxRPeak": arrayMax(rd.rPeaks.locS)
                 } : {};
                 var x = [10, 30, 5, 2, 100, 80, 95, 2];
-                console.log(Math.max(...x))
+                console.log("Maximum value: " + arrMax(x));
                 res.status(200).send({data: result});
             }
         });
@@ -106,7 +106,7 @@ module.exports = {
 function getTime(tStamp){
     var d = new Date(tStamp);
     var y = d.getFullYear();
-    var M = formatValue(d.getMonth());
+    var M = formatValue(d.getMonth()) + 1;
     var day = formatValue(d.getDate());
     var h = formatValue(d.getHours());
     var m = formatValue(d.getMinutes());
@@ -130,4 +130,16 @@ function getAverage(value){
 
 function formatValue(v){
     return v < 10 ? "0" + v : v;
+}
+
+function arrayMin(arr) {
+  return arr.reduce(function (p, v) {
+    return ( p < v ? p : v );
+  });
+}
+
+function arrayMax(arr) {
+  return arr.reduce(function (p, v) {
+    return ( p > v ? p : v );
+  });
 }
