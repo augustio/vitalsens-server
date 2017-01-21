@@ -64,7 +64,7 @@ module.exports = {
                     if(err)
                         console.log("Duplicate patients not allowed");
                 });
-                var result = rd.type.includes("ecg") ?  {
+                var result = rd.type.toLowerCase().includes("ecg") ?  {
                     "pId": rd.patientId,
                     "dType": rd.type,
                     "recordTime": getTime(rd.start),
