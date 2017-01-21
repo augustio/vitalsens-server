@@ -110,7 +110,7 @@ function getTime(tStamp){
     var m = formatValue(d.getMinutes());
     var s = formatValue(d.getSeconds());
     
-    return (day + "." + m + "." + y + ":" + h + ":" + m + ":" + s);
+    return (day + "." + m + "." + y + "  " + h + ":" + m + ":" + s);
 }
 
 function calculateHeartRate(rrIntervals){
@@ -119,6 +119,7 @@ function calculateHeartRate(rrIntervals){
 }
 
 function getAverage(value){
+    value = [10, 10, 10, 10, 10];
     var sum = value.reduce(function(a, b){
         return a + b;
     }, 0);
@@ -127,5 +128,5 @@ function getAverage(value){
 }
 
 function formatValue(v){
-    return v < 10 ? v : "0";
+    return v < 10 ? "0" + v : v;
 }
