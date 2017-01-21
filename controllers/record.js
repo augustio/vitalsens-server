@@ -64,7 +64,6 @@ module.exports = {
                     if(err)
                         console.log("Duplicate patients not allowed");
                 });
-                console.log(rd.rPeaks);
                 var result = {
                     "pId": rd.patientId,
                     "dType": rd.type,
@@ -72,8 +71,8 @@ module.exports = {
                     "duration": Math.round((rd.end - rd.start)/1000),
                     "heartRate": calculateHeartRate(rd.rrIntervals.signal),
                     "pvcCount": rd.pvcEvents.locs.length,
-                    "minRPeak": rd.rPeaks.locs.sort().shift(),
-                    "maxRPeak": rd.rPeaks.locs.sort().pop()
+                    "minRPeak": rd.rPeaks.locS.sort().shift(),
+                    "maxRPeak": rd.rPeaks.locS.sort().pop()
                 }
                 console.log(result);
                 res.status(200).send({data: result});
