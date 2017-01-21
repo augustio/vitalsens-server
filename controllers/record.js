@@ -74,6 +74,7 @@ module.exports = {
                     "minRPeak": rd.rPeaks.LocS.sort().shift(),
                     "maxRPeak": rd.rPeaks.LocS.sort().pop()
                 }
+                console.log(result);
                 res.status(200).send({data: result});
             }
         });
