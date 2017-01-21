@@ -64,7 +64,7 @@ module.exports = {
                     if(err)
                         console.log("Duplicate patients not allowed");
                 });
-                console.log(JSON.parse(rd.rPeaks).locS);
+                console.log(rd.rPeaks.locS);
                 var result = {
                     "pId": rd.patientId,
                     "dType": rd.type,
