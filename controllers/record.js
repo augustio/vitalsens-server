@@ -74,6 +74,8 @@ module.exports = {
                     "minRPeak": Math.min(...rd.rPeaks.locS),
                     "maxRPeak": Math.max(...rd.rPeaks.locS)
                 } : {};
+                var x = [10, 30, 5, 2, 100, 80, 95, 2];
+                console.log(Math.max(...x))
                 res.status(200).send({data: result});
             }
         });
@@ -104,13 +106,13 @@ module.exports = {
 function getTime(tStamp){
     var d = new Date(tStamp);
     var y = d.getFullYear();
-    var m = formatValue(d.getMonth());
+    var M = formatValue(d.getMonth());
     var day = formatValue(d.getDate());
     var h = formatValue(d.getHours());
     var m = formatValue(d.getMinutes());
     var s = formatValue(d.getSeconds());
     
-    return (day + "." + m + "." + y + "  " + h + ":" + m + ":" + s);
+    return (day + "." + M + "." + y + "  " + h + ":" + m + ":" + s);
 }
 
 function calculateHeartRate(rrIntervals){
@@ -119,7 +121,6 @@ function calculateHeartRate(rrIntervals){
 }
 
 function getAverage(value){
-    value = [10, 10, 10, 10, 10];
     var sum = value.reduce(function(a, b){
         return a + b;
     }, 0);
