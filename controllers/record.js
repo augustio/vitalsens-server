@@ -71,8 +71,8 @@ module.exports = {
                     "duration": Math.round((rd.end - rd.start)/1000),
                     "heartRate": calculateHeartRate(rd.rrIntervals.signal),
                     "pvcCount": rd.pvcEvents.locs.length,
-                    "minRPeak": rd.rPeaks.locS.sort().shift(),
-                    "maxRPeak": rd.rPeaks.locS.sort().pop()
+                    "minRPeak": Math.min(...rd.rPeaks.locS),
+                    "maxRPeak": Math.max(...rd.rPeaks.locS)
                 } : {};
                 res.status(200).send({data: result});
             }
@@ -102,7 +102,7 @@ module.exports = {
 }
 
 function getTime(tStamp){
-    var d = new Date(tStamp*1000);
+    var d = new Date(tStamp);
     var y = d.getFullYear();
     var m = formatValue(d.getMonth());
     var day = formatValue(d.getDate());
