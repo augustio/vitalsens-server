@@ -65,10 +65,14 @@ module.exports = {
                         console.log("Duplicate patients not allowed");
                 });
                 var result = {
-                    "rPeaks": rd.rPeaks,
-                    "pvcEvents": rd.pvcEvents,
-                    "rrIntervals": rd.rrIntervals,
-                    "hrvFeatures": rd.hrvFeatures 
+                    "pId": rd.patientId,
+                    "dType": rd.type,
+                    "recordTime": getTime(rd.start),
+                    "duration": Math.round((rd.end - rd.start)/1000),
+                    "heartRate": calculateHeartRate(rd.rrIntervals.signal),
+                    "pvcCount": rd.pvcEvents.locs.length,
+                    "minRPeak": rd.rPeaks.LocS.sort().shift(),
+                    "maxRPeak": rd.rPeaks.LocS.sort().pop()
                 }
                 res.status(200).send({data: result});
             }
@@ -95,4 +99,33 @@ module.exports = {
             });
         });
     }
+}
+
+function getTime(tStamp){
+    var d = new Date(tStamp*1000);
+    var y = d.getFullYear();
+    var m = fomatValue(d.getMonth());
+    var day = formatValue(d.getDate());
+    var h = formatValue(d.getHours());
+    var m = formatValue(d.getMinutes());
+    var s = formatValue(d.getSeconds());
+    
+    return (day + "." + m + "." + y + ":" + h + ":" + m + ":" + s);
+}
+
+function calculateHeartRate(rrIntervals){
+    var avRRInterval = getAverage(rrIntervals);
+    return 60/avRRInterval;
+}
+
+function getAverage(value){
+    var sum = value.reduce(function(a, b){
+        return a + b;
+    }, 0);
+    
+    return sum / value.length;
+}
+
+function formatValue(v){
+    return v < 10 ? v : "0";
 }
