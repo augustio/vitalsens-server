@@ -71,11 +71,11 @@ module.exports = {
                     "duration": Math.round((rd.end - rd.start)/1000),
                     "heartRate": calculateHeartRate(rd.rrIntervals.signal),
                     "pvcCount": rd.pvcEvents.locs.length,
-                    "minRPeak": arrMin(rd.rPeaks.locS),
+                    "minRPeak": arrayMin(rd.rPeaks.locS),
                     "maxRPeak": arrayMax(rd.rPeaks.locS)
                 } : {};
                 var x = [10, 30, 5, 2, 100, 80, 95, 2];
-                console.log("Maximum value: " + arrMax(x));
+                console.log("Maximum value: " + arrayMax(x));
                 res.status(200).send({data: result});
             }
         });
