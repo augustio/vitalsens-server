@@ -74,8 +74,6 @@ module.exports = {
                     "minRPeak": arrayMin(rd.rPeaks.locS),
                     "maxRPeak": arrayMax(rd.rPeaks.locS)
                 } : {};
-                var x = [10, 30, 5, 2, 100, 80, 95, 2];
-                console.log("Maximum value: " + arrayMax(x));
                 res.status(200).send({data: result});
             }
         });
@@ -106,7 +104,7 @@ module.exports = {
 function getTime(tStamp){
     var d = new Date(tStamp);
     var y = d.getFullYear();
-    var M = formatValue(d.getMonth()) + 1;
+    var M = formatValue(d.getMonth() + 1);
     var day = formatValue(d.getDate());
     var h = formatValue(d.getHours());
     var m = formatValue(d.getMinutes());
