@@ -64,7 +64,7 @@ module.exports = {
                     if(err)
                         console.log("Duplicate patients not allowed");
                 });
-                var result = {
+                var result = rd.type.includes("ecg") ?  {
                     "pId": rd.patientId,
                     "dType": rd.type,
                     "recordTime": getTime(rd.start),
@@ -73,7 +73,7 @@ module.exports = {
                     "pvcCount": rd.pvcEvents.locs.length,
                     "minRPeak": rd.rPeaks.locS.sort().shift(),
                     "maxRPeak": rd.rPeaks.locS.sort().pop()
-                }
+                } : {};
                 res.status(200).send({data: result});
             }
         });
