@@ -64,7 +64,6 @@ module.exports = {
                     if(err)
                         console.log("Duplicate patients not allowed");
                 });
-                console.log(rd.rPeaks.locS.sort());
                 var result = {
                     "pId": rd.patientId,
                     "dType": rd.type,
@@ -75,7 +74,6 @@ module.exports = {
                     "minRPeak": rd.rPeaks.locS.sort().shift(),
                     "maxRPeak": rd.rPeaks.locS.sort().pop()
                 }
-                console.log(result);
                 res.status(200).send({data: result});
             }
         });
@@ -117,7 +115,7 @@ function getTime(tStamp){
 
 function calculateHeartRate(rrIntervals){
     var avRRInterval = getAverage(rrIntervals);
-    return 60/avRRInterval;
+    return Math.round(60/avRRInterval);
 }
 
 function getAverage(value){
