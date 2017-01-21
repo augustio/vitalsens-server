@@ -105,7 +105,7 @@ module.exports = {
 function getTime(tStamp){
     var d = new Date(tStamp*1000);
     var y = d.getFullYear();
-    var m = fomatValue(d.getMonth());
+    var m = formatValue(d.getMonth());
     var day = formatValue(d.getDate());
     var h = formatValue(d.getHours());
     var m = formatValue(d.getMinutes());
