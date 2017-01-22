@@ -1,6 +1,9 @@
 var mongoose = require('mongoose');
 
-dbURL = "mongodb://localhost:27017/vitalsens";
+if(process.env.NODE_ENV == 'development')
+    dbURL = "mongodb://83.136.249.208:27017/vitalsens";
+else
+    dbURL = "mongodb://localhost:27017/vitalsens";
 module.exports = {
     //Database connection configuration
     connectDb: function(){
