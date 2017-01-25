@@ -131,13 +131,17 @@ function formatValue(v){
 }
 
 function arrayMin(arr) {
-  return arr.reduce(function (p, v) {
-    return ( p < v ? p : v );
-  });
+    if(arr.length < 1)
+        return 0;
+    return arr.reduce(function (p, v), {
+        return ( p < v ? p : v );
+    });
 }
 
 function arrayMax(arr) {
-  return arr.reduce(function (p, v) {
-    return ( p > v ? p : v );
-  });
+    if(arr.length < 1)
+        return 0;
+    return arr.reduce(function (p, v) {
+        return ( p > v ? p : v );
+    });
 }
