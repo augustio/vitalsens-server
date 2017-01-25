@@ -133,7 +133,7 @@ function formatValue(v){
 function arrayMin(arr) {
     if(arr.length < 1)
         return 0;
-    return arr.reduce(function (p, v), {
+    return arr.reduce(function (p, v) {
         return ( p < v ? p : v );
     });
 }
