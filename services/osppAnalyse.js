@@ -25,9 +25,11 @@ module.exports = function(req, res, next){
             
             console.log("PATIENT ID: " + req.body.patientId);
             for(i = 0; i < chOne.length; i++) {
-                var sample = parseInt(chOne[i]);
-                if(sample == appConfig.NAN)
-                    sample == NaN;
+                var sample = chOne[i];
+                if(sample == null)
+                    sample = NaN;
+                else
+                    sample = parseInt(sample);
                 data.push(sample);
             }
             var ecgDoc = {'ch1': data};
