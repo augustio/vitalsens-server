@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
+var path = require('path');
 var bodyParser = require('body-parser');
+var cors = require('./services/cors');
 var User = require('./models/User');
 var auth = require('./controllers/auth');
 var patient = require('./controllers/patient');
@@ -9,7 +11,6 @@ var recordData = require('./controllers/recordData');
 var appConfig = require('./config/appConfig');
 var checkAuthenticated = require('./services/checkAuthenticated');
 var osppAnalyse = require('./services/osppAnalyse');
-var cors = require('./services/cors');
 
 
 app.use(bodyParser.json({limit: '50mb'}));
@@ -17,10 +18,9 @@ app.use(bodyParser.urlencoded({limit: '50', extended: true}));
 
 app.use(cors);
 
-app.use(express.static('../vitalsens-client/dist'));
+app.use(express.static(path.join(__dirname, '../vitalsens-client/dist')));
 
 app.get('/api/records', record.get);
-//app.get('/api/records', checkAuthenticated, record.get);
 app.get('/api/record-details', checkAuthenticated.get, recordData.get);
 app.get('/api/full-record-data', recordData.getFullRecordData);
 app.get('/api/record-analysis', recordData.getRecordAnalysis);

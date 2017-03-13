@@ -7,6 +7,7 @@ var recordDataSchema = mongoose.Schema({
     start:{type: Number, required: true},
     end: {type: Number, required: true},
     type: {type: String, required: true},
+    samplingRate: {type: Number, default: 230},
     pEStart: {type: Number, required: true, default: -1},
     pEEnd: {type: Number, required: true, default: -1},
     temp: {type: Number, required: true, default: 0.0},
@@ -16,7 +17,7 @@ var recordDataSchema = mongoose.Schema({
     rPeaks: {type: {}},
     pvcEvents: {type: {}},
     rrIntervals: {type: {}},
-    hrvFeatures: {type: {}} 
+    hrvFeatures: {type: {}}
 });
 recordDataSchema.index({start: 1, timeStamp: 1, patientId: 1, type: 1}, {unique: true});
 recordDataSchema.index({timeStamp: 1, patientId: 1, type: 1});
