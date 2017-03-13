@@ -15,18 +15,18 @@ module.exports = {
 
             var user = new User(req.body);
 
-            user.save(function (err, result) {
+            user.save(function (err) {
                 if (err) {
                     res.status(500).send({
                         message: err.message
                     });
                 }
-                res.status(200).send({token: createToken(result)});
+                res.status(200).send({message: "User successfully registered"});
             });
         });
     },
     login: function (req, res){
-        
+
         User.findOne({
             email: req.body.email
         }, function(err, user){
@@ -35,7 +35,7 @@ module.exports = {
                     message: 'Email invalid'
                 });
             }
-            
+
             bcrypt.compare(req.body.pwd, user.pwd, function(err, result){
                 if(result){
                     res.status(200).send({
