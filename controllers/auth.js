@@ -17,7 +17,7 @@ module.exports = {
 
             user.save(function (err) {
                 if (err) {
-                    res.status(500).send({
+                    return res.status(500).send({
                         message: err.message
                     });
                 }
