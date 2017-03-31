@@ -40,26 +40,28 @@ module.exports = {
             RecordData
                 .find({type: req.query.type,
                              timeStamp: req.query.timeStamp,
-                             patientId: req.query.patientId}, 
+                             patientId: req.query.patientId},
                        'patientId timeStamp type chOne chTwo chThree end')
                 .sort('end')
                 .exec(function(err, result){
                 if(err){
                     console.error(err);
                 }
-                var data = {
-                    patientId: result[0].patientId,
-                    startTimeStamp: result[0].timeStamp,
-                    endTimeStamp: result[result.length - 1].end,
-                    type: result[0].type,
-                    chOne: [],
-                    chTwo: [],
-                    chThree: []
-                };
-                for(var i = 0; i < result.length; i++){
+                var data = {};
+                if(result[0]){
+                  data.patientId = result[0].patientId;
+                  data.startTimeStamp = result[0].timeStamp;
+                  data.endTimeStamp = result[result.length - 1].end;
+                  data.type = result[0].type;
+                  data.chOne = [];
+                  data.chTwo = [];
+                  data.chThree = [];
+
+                  for(var i = 0; i < result.length; i++){
                     data.chOne = data.chOne.concat(result[i].chOne);
                     data.chTwo = data.chTwo.concat(result[i].chTwo);
                     data.chThree = data.chThree.concat(result[i].chThree);
+                  }
                 }
                 res.send(data);
             });
@@ -79,15 +81,16 @@ module.exports = {
                 if(err){
                     console.error(err);
                 }
-                var data = {
-                    patientId: result[0].patientId,
-                    timeStamp: result[0].timeStamp,
-                    type: result[0].type,
-                    rPeaks: result[0].rPeaks,
-                    pvcEvents: result[0].pvcEvents,
-                    rrIntervals: result[0].rrIntervals,
-                    hrvFeatures: result[0].hrvFeatures
-                };
+                var data = {};
+                if(result[0]){
+                  data.patientId = result[0].patientId;
+                  data.timeStamp = result[0].timeStamp;
+                  data.type = result[0].type;
+                  data.rPeaks = result[0].rPeaks;
+                  data.pvcEvents = result[0].pvcEvents;
+                  data.rrIntervals = result[0].rrIntervals;
+                  data.hrvFeatures = result[0].hrvFeatures;
+                }
                 res.send(data);
             });
         }
