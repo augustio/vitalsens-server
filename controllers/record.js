@@ -42,15 +42,16 @@ module.exports = {
                     if(err)
                         console.log("Duplicate patients not allowed");
                 });
+
                 var result = rd.type.toLowerCase().includes("ecg") ?  {
                     "pId": rd.patientId,
                     "dType": rd.type,
                     "recordTime": getTime(rd.start),
                     "duration": Math.round((rd.end - rd.start)/1000),
-                    "heartRate": calculateHeartRate(rd.rrIntervals.signal),
-                    "pvcCount": rd.pvcEvents.locs.length,
-                    "minRPeak": arrayMin(rd.rPeaks.locS),
-                    "maxRPeak": arrayMax(rd.rPeaks.locS)
+                    "heartRate": (rd.rrIntervals ? calculateHeartRate(rd.rrIntervals.signal) : 0),
+                    "pvcCount": (rd.pvcEvents ? rd.pvcEvents.locs.length : 0),
+                    "minRPeak": (rd.rPeaks ? arrayMin(rd.rPeaks.locS) : 0),
+                    "maxRPeak": (rd.rPeaks ? arrayMax(rd.rPeaks.locS) : 0)
                 } : {};
                 res.status(200).send({data: result});
             }
