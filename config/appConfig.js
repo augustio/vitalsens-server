@@ -1,15 +1,19 @@
 var mongoose = require('mongoose');
 var dbURL;
-if(process.env.NODE_ENV == 'development')
-    dbURL = "mongodb://83.136.249.208:27017/vitalsens";
-else
-    dbURL = "mongodb://localhost:27017/vitalsens";
+var message;
+if(process.env.NODE_ENV == 'development'){
+  message = "Connected to remote db (Server: " + process.env.NODE_ENV + ")";
+  dbURL = "mongodb://83.136.249.208:27017/vitalsens";
+}else{
+  message = "Connected to local db (Server: " + process.env.NODE_ENV + ")";
+  dbURL = "mongodb://localhost:27017/vitalsens";
+}
 module.exports = {
     //Database connection configuration
     connectDb: function(){
         mongoose.connect(dbURL, function(err, db){
             if(!err){
-                console.log("we are connected to mongo");
+                console.log(message);
             }
         });
     },
