@@ -27,14 +27,27 @@ module.exports = {
 
     post: function(req, res){
         var recordData = new RecordData(req.body);
-        if(recordData.type.substring(0,3).toUpperCase() == 'ECG'){
+        var record = new Record(req.body);
+        var patient = new Patient({"patientId": recordData.patientId});
+        if(req.body.type.toLowerCase().includes("ecg")){
+          recordData.type = "ECG";
+          record.type = "ECG";
+        }else if(req.body.type.toLowerCase().includes("ppg")){
+          recordData.type = "ECG";
+          record.type = "ECG";
+        }else if(req.body.type.toLowerCase().includes("acc")){
+          recordData.type = "ACC";
+          record.type = "ACC";
+        }else if(req.body.type.toLowerCase().includes("imp")){
+          recordData.type = "IMP";
+          record.type = "IMP";
+        }
+        if(recordData.type == 'ECG'){
             recordData.rPeaks = req.body.analysisData.rpeaks;
             recordData.pvcEvents = req.body.analysisData.pvcevents;
             recordData.rrIntervals = req.body.analysisData.rrintervals;
             recordData.hrvFeatures = req.body.analysisData.hrvFeatures;
         }
-        var record = new Record(req.body);
-        var patient = new Patient({"patientId": recordData.patientId});
 
         recordData.save(function(err, rd){
             if(err){
@@ -49,7 +62,7 @@ module.exports = {
                         console.log("Duplicate patients not allowed");
                 });
 
-                var result = rd.type.toLowerCase().includes("ecg") ?  {
+                var result = rd.type == "ECG" ?  {
                     "pId": rd.patientId,
                     "dType": rd.type,
                     "recordTime": getTime(rd.start),

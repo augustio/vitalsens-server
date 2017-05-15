@@ -3,10 +3,10 @@ var dbURL;
 var message;
 if(process.env.NODE_ENV == 'development'){
   message = "Connected to remote db (Server: " + process.env.NODE_ENV + ")";
-  dbURL = "mongodb://83.136.249.208:27017/vitalsens";
+  dbURL = "mongodb://83.136.249.208:27017/vitalsensdb";
 }else{
   message = "Connected to local db (Server: " + process.env.NODE_ENV + ")";
-  dbURL = "mongodb://localhost:27017/vitalsens";
+  dbURL = "mongodb://localhost:27017/vitalsensdb";
 }
 module.exports = {
     //Database connection configuration
