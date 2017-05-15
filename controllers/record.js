@@ -27,13 +27,14 @@ module.exports = {
 
     post: function(req, res){
         var recordData = new RecordData(req.body);
-        if(recordData.type.substring(0,3).toUpperCase() == 'ECG'){
-            var analysis = req.body.analysisData || {};
-            recordData.rPeaks = analysis.rpeaks;
-            recordData.pvcEvents = analysis.pvcevents;
-            recordData.rrIntervals = analysis.rrintervals;
-            recordData.hrvFeatures = analysis.hrvFeatures;
-        }
+        console.log(recordData);
+        // if(recordData.type.substring(0,3).toUpperCase() == 'ECG'){
+        //     var analysis = req.body.analysisData || {};
+        //     recordData.rPeaks = analysis.rpeaks;
+        //     recordData.pvcEvents = analysis.pvcevents;
+        //     recordData.rrIntervals = analysis.rrintervals;
+        //     recordData.hrvFeatures = analysis.hrvFeatures;
+        // }
         var record = new Record(req.body);
         var patient = new Patient({"patientId": recordData.patientId});
 
@@ -55,10 +56,14 @@ module.exports = {
                     "dType": rd.type,
                     "recordTime": getTime(rd.start),
                     "duration": Math.round((rd.end - rd.start)/1000),
-                    "heartRate": (rd.rrIntervals ? calculateHeartRate(rd.rrIntervals.signal) : 0),
-                    "pvcCount": (rd.pvcEvents ? rd.pvcEvents.locs.length : 0),
-                    "minRPeak": (rd.rPeaks ? arrayMin(rd.rPeaks.locS) : 0),
-                    "maxRPeak": (rd.rPeaks ? arrayMax(rd.rPeaks.locS) : 0)
+                    // "heartRate": (rd.rrIntervals ? calculateHeartRate(rd.rrIntervals.signal) : 0),
+                    // "pvcCount": (rd.pvcEvents ? rd.pvcEvents.locs.length : 0),
+                    // "minRPeak": (rd.rPeaks ? arrayMin(rd.rPeaks.locS) : 0),
+                    // "maxRPeak": (rd.rPeaks ? arrayMax(rd.rPeaks.locS) : 0)
+                    "heartRate": 0,
+                    "pvcCount": 0,
+                    "minRPeak": 0,
+                    "maxRPeak": 0
                 } : {};
                 res.status(200).send({data: result});
             }
