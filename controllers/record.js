@@ -42,12 +42,12 @@ module.exports = {
           recordData.type = "IMP";
           record.type = "IMP";
         }
-        if(recordData.type == 'ECG'){
-            recordData.rPeaks = req.body.analysisData.rpeaks;
-            recordData.pvcEvents = req.body.analysisData.pvcevents;
-            recordData.rrIntervals = req.body.analysisData.rrintervals;
-            recordData.hrvFeatures = req.body.analysisData.hrvFeatures;
-        }
+        // if(recordData.type == 'ECG'){
+        //     recordData.rPeaks = req.body.analysisData.rpeaks;
+        //     recordData.pvcEvents = req.body.analysisData.pvcevents;
+        //     recordData.rrIntervals = req.body.analysisData.rrintervals;
+        //     recordData.hrvFeatures = req.body.analysisData.hrvFeatures;
+        // }
 
         recordData.save(function(err, rd){
             if(err){
