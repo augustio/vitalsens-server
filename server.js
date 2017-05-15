@@ -32,8 +32,7 @@ app.get('/api/patients', checkAuthenticated.get, patient.get);
 app.get('/api/users', user.get);
 
 
-//app.post('/api/record', checkAuthenticated.post_modify, osppAnalyse, record.post);
-app.post('/api/record', checkAuthenticated.post_modify, record.post);
+app.post('/api/record', checkAuthenticated.post_modify, osppAnalyse, record.post);
 app.post('/auth/register', auth.register);
 app.post('/auth/login', auth.login);
 app.post('/api/users', user.post);
