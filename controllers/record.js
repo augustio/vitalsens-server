@@ -28,10 +28,11 @@ module.exports = {
     post: function(req, res){
         var recordData = new RecordData(req.body);
         if(recordData.type.substring(0,3).toUpperCase() == 'ECG'){
-            recordData.rPeaks = req.body.analysisData.rpeaks;
-            recordData.pvcEvents = req.body.analysisData.pvcevents;
-            recordData.rrIntervals = req.body.analysisData.rrintervals;
-            recordData.hrvFeatures = req.body.analysisData.hrvFeatures;
+            var analysis = req.body.analysisData || {};
+            recordData.rPeaks = analysis.rpeaks;
+            recordData.pvcEvents = analysis.pvcevents;
+            recordData.rrIntervals = analysis.rrintervals;
+            recordData.hrvFeatures = analysis.hrvFeatures;
         }
         var record = new Record(req.body);
         var patient = new Patient({"patientId": recordData.patientId});
