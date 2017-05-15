@@ -4,7 +4,7 @@
   "description": "Vitalsens Cloud Service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "startdev": "export NODE_ENV='development' && nodemon server.js"
   },
   "author": "electria",
   "license": "ISC",
@@ -14,8 +14,9 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "jwt-simple": "^0.5.0",
-    "moment": "^2.14.1",
+    "moment": "^2.18.1",
     "mongoose": "^4.5.7",
-    "mongoose-unique-validator": "^1.0.2"
+    "mongoose-unique-validator": "^1.0.2",
+    "morgan": "^1.8.1"
   }
 }

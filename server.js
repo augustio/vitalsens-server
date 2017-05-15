@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
+var morgan = require('morgan');
 var cors = require('./services/cors');
 var User = require('./models/User');
 var auth = require('./controllers/auth');
@@ -18,6 +19,8 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50', extended: true}));
 
 app.use(cors);
+
+app.use(morgan('tiny'));
 
 app.use(express.static(path.join(__dirname, '../vitalsens-client/dist')));
 
@@ -41,5 +44,5 @@ app.delete('/api/user', user.delete);
 appConfig.connectDb();
 
 var server = app.listen(5000, function(){
-    console.log("Listening on port 5000");
+    console.log("Vitalsens Cloud live on port 5000");
 });
